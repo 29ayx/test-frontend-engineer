@@ -1,7 +1,8 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import ProductCard from "@/components/product_card";
-import Link from "next/link"; // Import Link from Next.js
+import Link from "next/link";
+import Header from "@/components/header";
 
 type Product = {
   id: number;
@@ -30,18 +31,30 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      {/* Centered and Boxed Layout */}
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+<div className="mt-16 pt-6">
+      {/* Banner Section */}
+      <div className="max-w-6xl mx-auto mt-6 mb-10 px-4">
+        <img
+          src="/banner.png"
+          alt="Promotional Banner"
+          className="rounded-lg w-full shadow-lg"
+        />
+      </div>
+
+      {/* Product Grid */}
+      <div className="max-w-6xl mx-auto px-4">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (
             <Link key={product.id} href={`/product/${product.id}`} passHref>
-             
+              <div>
                 <ProductCard product={product} />
-              
+              </div>
             </Link>
           ))}
         </div>
+      </div>
       </div>
     </div>
   );
