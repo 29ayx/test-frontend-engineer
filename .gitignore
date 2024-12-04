@@ -1,2 +1,19 @@
-node_modules
-.next
+# Node modules
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.production.local
+
+# Next.js build output
+.next/
+
+# Logs
+logs
+*.log
+
+# Others
+.DS_Store
+.vscode/
