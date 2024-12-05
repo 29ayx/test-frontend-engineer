@@ -44,7 +44,7 @@ When ever any product is added to cart, we see this banner at bottom that shows 
 
 This is the cart page, that shows all the products along with the prices of individual and sub total
 
-![Uploading image.png…]()
+![image](https://github.com/user-attachments/assets/58fe24db-33f0-4fa0-beda-4e263646961f)
 
 
 On desktop it shows in two columns, make its easier for the user to guide through the process
