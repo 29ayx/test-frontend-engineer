@@ -17,14 +17,15 @@ const Header: React.FC = () => {
         <nav className="flex-grow text-center">
           <a
             href="/"
-            className="text-[#007bff] font-semibold text-[15px] hover:underline"
+            className="text-black font-semibold text-[15px] hover:underline"
           >
             Home
           </a>
         </nav>
 
         {/* Cart Button */}
-        <button className="flex items-center text-[#007bff] hover:underline font-semibold text-[15px]">
+        <a href="/cart">
+        <button className="flex items-center text-black hover:underline font-semibold text-[15px]">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="w-5 h-5 mr-1"
@@ -47,6 +48,7 @@ const Header: React.FC = () => {
           </svg>
           Cart
         </button>
+        </a>
       </div>
     </header>
   );

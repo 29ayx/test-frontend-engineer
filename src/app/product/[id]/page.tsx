@@ -1,4 +1,9 @@
-import React from "react";
+'use client';
+
+import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import Cookies from "js-cookie";
+import ProductCard from "@/components/product_card";
 
 type Product = {
   id: number;
@@ -21,23 +26,87 @@ async function fetchProduct(id: string): Promise<Product> {
   return response.json();
 }
 
-export default async function ProductDetails({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params; // Unwrap the `params` object
-  const product = await fetchProduct(id); // Fetch product details
+async function fetchAllProducts(): Promise<Product[]> {
+  const response = await fetch("https://fakestoreapi.com/products");
+  if (!response.ok) {
+    throw new Error("Failed to fetch products");
+  }
+  return response.json();
+}
+
+export default function ProductDetails() {
+  const params = useParams(); // Get params dynamically
+  const id = params.id; // Extract the product ID
+  const [product, setProduct] = useState<Product | null>(null);
+  const [suggestedProducts, setSuggestedProducts] = useState<Product[]>([]);
+  const [cart, setCart] = useState<{ [key: string]: number }>(() => {
+    const cartData = Cookies.get("cart");
+    return cartData ? JSON.parse(cartData) : {};
+  });
+
+  useEffect(() => {
+    const loadProduct = async () => {
+      try {
+        const fetchedProduct = await fetchProduct(id);
+        const fetchedProducts = await fetchAllProducts();
+        setProduct(fetchedProduct);
+        setSuggestedProducts(
+          fetchedProducts.filter((p) => p.id.toString() !== id)
+        );
+      } catch (error) {
+        console.error("Failed to load product or suggested products:", error);
+      }
+    };
+
+    if (id) {
+      loadProduct();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
+  }, [cart]);
+
+  const handleAddToCart = () => {
+    if (!product) return;
+    setCart((prev) => ({ ...prev, [product.id]: 1 }));
+  };
+
+  const handleIncreaseQuantity = () => {
+    if (!product) return;
+    setCart((prev) => ({ ...prev, [product.id]: prev[product.id] + 1 }));
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (!product) return;
+    setCart((prev) => {
+      const updatedCart = { ...prev };
+      if (updatedCart[product.id] > 1) {
+        updatedCart[product.id] -= 1;
+      } else {
+        delete updatedCart[product.id];
+      }
+      return updatedCart;
+    });
+  };
+
+  if (!product) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <section className="py-8 bg-white md:py-16 dark:bg-gray-900 antialiased">
+    <section className="py-8 mt-10 pt-10 bg-white md:py-16 dark:bg-gray-900 antialiased">
       <div className="max-w-screen-xl px-4 mx-auto 2xl:px-0">
         <div className="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
           {/* Image Section */}
           <div className="shrink-0 max-w-md lg:max-w-lg mx-auto">
             <img
-              className="w-full dark:hidden"
+              className="w-full max-h-[300px] sm:max-h-[400px] dark:hidden object-contain"
               src={product.image}
               alt={product.title}
             />
             <img
-              className="w-full hidden dark:block"
+              className="w-full max-h-[300px] sm:max-h-[400px] hidden dark:block object-contain"
               src={product.image}
               alt={product.title}
             />
@@ -82,20 +151,47 @@ export default async function ProductDetails({ params }: { params: Promise<{ id:
               </div>
             </div>
 
-            <div className="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
-              <button
-                className="flex items-center justify-center py-2.5 px-5 text-sm font-medium text-white focus:outline-none bg-green-600 rounded-lg border border-green-700 hover:bg-green-700 hover:text-white focus:z-10 focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800"
-              >
-                🛒 Add to Cart
-              </button>
+            <div className="mt-6 lg:mt-12">
+              {cart[product.id] ? (
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={handleDecreaseQuantity}
+                    className="px-4 py-2 bg-gray-300 text-gray-900 rounded-lg"
+                  >
+                    -
+                  </button>
+                  <span className="text-lg font-bold">{cart[product.id]}</span>
+                  <button
+                    onClick={handleIncreaseQuantity}
+                    className="px-4 py-2 bg-gray-300 text-gray-900 rounded-lg"
+                  >
+                    +
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={handleAddToCart}
+                  className="px-6 py-3 bg-green-600 text-white text-2xl rounded-lg hover:bg-green-700"
+                >
+                   Add to Cart
+                </button>
+              )}
             </div>
 
-            <hr className="my-6 md:my-8 border-gray-200 dark:border-gray-800" />
+            <hr className="my-6 md:my-8 border-gray-200 dark:border-gray-800 lg:mt-12" />
 
             <p className="mb-6 text-gray-500 dark:text-gray-400">
               {product.description}
             </p>
           </div>
+        </div>
+
+        {/* Suggested Products */}
+        <h2 className="text-lg font-semibold mt-12">Suggested Products</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+          {suggestedProducts.map((suggestedProduct) => (
+            <ProductCard key={suggestedProduct.id} product={suggestedProduct} />
+          ))}
         </div>
       </div>
     </section>
