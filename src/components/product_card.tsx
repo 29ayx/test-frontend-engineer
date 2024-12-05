@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { Star } from 'lucide-react'
+import { Star } from 'lucide-react';
 
 type Product = {
   id: number;
@@ -31,20 +31,29 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [showAddedMessage, setShowAddedMessage] = useState(false);
   const router = useRouter();
 
+  // Update cookies when cart changes
   useEffect(() => {
     Cookies.set("cart", JSON.stringify(cart), { expires: 7 });
   }, [cart]);
 
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    setCart((prev) => ({ ...prev, [product.id]: 1 }));
+    e.stopPropagation(); // Prevent card click navigation
+    setCart((prev) => {
+      const updatedCart = { ...prev, [product.id]: (prev[product.id] || 0) + 1 };
+      Cookies.set("cart", JSON.stringify(updatedCart), { expires: 7 }); // Update cookies immediately
+      return updatedCart;
+    });
     setShowAddedMessage(true);
-    setTimeout(() => setShowAddedMessage(false), 2000);
+    setTimeout(() => setShowAddedMessage(false), 2000); // Hide the "added to cart" message after 2 seconds
   };
 
   const handleIncreaseQuantity = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    setCart((prev) => ({ ...prev, [product.id]: prev[product.id] + 1 }));
+    setCart((prev) => {
+      const updatedCart = { ...prev, [product.id]: (prev[product.id] || 0) + 1 };
+      Cookies.set("cart", JSON.stringify(updatedCart), { expires: 7 }); // Update cookies immediately
+      return updatedCart;
+    });
   };
 
   const handleDecreaseQuantity = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -56,6 +65,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       } else {
         delete updatedCart[product.id];
       }
+      Cookies.set("cart", JSON.stringify(updatedCart), { expires: 7 }); // Update cookies immediately
       return updatedCart;
     });
   };
