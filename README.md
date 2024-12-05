@@ -1,4 +1,5 @@
-![banner.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/70d26bfd-e6ba-47da-bc18-b5918650d322/057e447c-77bd-4158-8524-b449e29e1ed1/banner.png)
+
+![banner](https://github.com/user-attachments/assets/813cf50b-3c3e-44df-bed6-dee878c50a6e)
 
 ## Getting Started
 
@@ -13,32 +14,37 @@ pnpm dev (to run the server)
 
 Open [http://localhost:3000](http://localhost:3000/) with your browser to see the project
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/70d26bfd-e6ba-47da-bc18-b5918650d322/648794ce-e506-4131-81ab-005f0786293f/image.png)
+![image](https://github.com/user-attachments/assets/ef6149d3-818d-41c6-997c-e00e1af25d08)
+
 
 Added header to navigate between home page and cart
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/70d26bfd-e6ba-47da-bc18-b5918650d322/83d9112d-5c45-4351-8b8d-a3b3347ba84a/image.png)
+![image](https://github.com/user-attachments/assets/3c2fce15-e375-4f38-85f8-05dd599baf3d)
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/70d26bfd-e6ba-47da-bc18-b5918650d322/07424dcc-78fc-44f0-b7ba-db6259016ad0/image.png)
 
 The moment product is added to cart, it shows the quantity that could be updated by the user anytime. Also the product id is store in the cookies, so user don’t loose track of their cart items.
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/70d26bfd-e6ba-47da-bc18-b5918650d322/6ef1853b-3fb2-4c6d-88d6-cc1b2b85cdb1/image.png)
+![image](https://github.com/user-attachments/assets/8ea9d009-0ad2-439c-8374-d39a10cd6346)
+
 
 Individual product pages has been added, to show futher more details such as full title, description and rating. To make the page more engaging I have addded suggested products that loads more products so the user could browse more and increase the chance that user purchase more products.
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/70d26bfd-e6ba-47da-bc18-b5918650d322/78ab8823-29ce-4946-bafe-f0597a178a7a/image.png)
+![image](https://github.com/user-attachments/assets/51d8a1d5-0061-496c-b4a9-99843a0b3797)
+
 
 I have made the page completely responsive
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/70d26bfd-e6ba-47da-bc18-b5918650d322/fafbe3a9-0db9-4b49-90a6-537a6c31df44/image.png)
+![image](https://github.com/user-attachments/assets/776e9868-8baf-4d9a-b799-90702c7659bd)
+
 
 When ever any product is added to cart, we see this banner at bottom that shows the count and button to goto cart.
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/70d26bfd-e6ba-47da-bc18-b5918650d322/56f5b93a-79cb-4f04-a74c-09a8acec541b/image.png)
+![image](https://github.com/user-attachments/assets/1d5c41b0-e218-47f8-b4ba-808188ecada3)
+
 
 This is the cart page, that shows all the products along with the prices of individual and sub total
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/70d26bfd-e6ba-47da-bc18-b5918650d322/f3d66b95-e76e-446b-8d9d-5a3e08265f41/image.png)
+![Uploading image.png…]()
+
 
 On desktop it shows in two columns, make its easier for the user to guide through the process
