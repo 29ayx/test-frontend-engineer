@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
@@ -26,7 +26,6 @@ export default function Cart() {
 
   useEffect(() => {
     const loadCartProducts = async () => {
-      // Get cart data from cookies
       const cartData = Cookies.get("cart");
       if (!cartData) {
         return;
@@ -34,14 +33,15 @@ export default function Cart() {
 
       const cartItems = JSON.parse(cartData) as { [key: number]: number };
 
-      // Fetch products for each item in cart
-      const productPromises = Object.entries(cartItems).map(async ([id, quantity]) => {
-        const product = await fetchProduct(id);
-        return {
-          ...product,
-          quantity: quantity
-        };
-      });
+      const productPromises = Object.entries(cartItems).map(
+        async ([id, quantity]) => {
+          const product = await fetchProduct(id);
+          return {
+            ...product,
+            quantity: quantity,
+          };
+        }
+      );
 
       try {
         const products = await Promise.all(productPromises);
@@ -78,11 +78,13 @@ export default function Cart() {
 
   const handleDecreaseQuantity = (id: number) => {
     setCartProducts((prev) => {
-      const updatedProducts = prev.map((product) =>
-        product.id === id
-          ? { ...product, quantity: product.quantity - 1 }
-          : product
-      ).filter((product) => product.quantity > 0);
+      const updatedProducts = prev
+        .map((product) =>
+          product.id === id
+            ? { ...product, quantity: product.quantity - 1 }
+            : product
+        )
+        .filter((product) => product.quantity > 0);
       updateCartCookies(updatedProducts);
       calculateTotal(updatedProducts);
       return updatedProducts;
@@ -94,44 +96,50 @@ export default function Cart() {
       acc[product.id] = product.quantity;
       return acc;
     }, {} as { [key: number]: number });
-    
+
     Cookies.set("cart", JSON.stringify(cartItems));
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
-      {cartProducts.length === 0 ? (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
+  if (cartProducts.length === 0) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
         <p className="text-gray-600 text-xl mb-4">Your cart is empty.</p>
         <button
-          onClick={() => window.location.href = "/"}
+          onClick={() => (window.location.href = "/")}
           className="px-6 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700"
         >
           Get Products
         </button>
       </div>
-      
-      ) : (
-        <div className="space-y-6">
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Left Column: Product List */}
+        <div className="md:w-2/3 space-y-6">
           {cartProducts.map((product) => (
             <div
               key={product.id}
               className="flex items-center justify-between bg-white p-4 rounded-lg shadow-md"
             >
-              <div className="flex items-center">
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="w-16 h-16 object-contain rounded-lg"
-                />
-                <div className="ml-4">
-                  <h2 className="text-sm font-bold text-gray-800">
-                    {product.title}
-                  </h2>
-                  <p className="text-gray-500">${product.price}</p>
+              <a href={`/product/${product.id}`}>
+                <div className="flex items-center">
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="w-16 h-16 object-contain rounded-lg"
+                  />
+                  <div className="ml-4">
+                    <h2 className="text-sm font-bold text-gray-800">
+                      {product.title}
+                    </h2>
+                    <p className="text-gray-500">${product.price}</p>
+                  </div>
                 </div>
-              </div>
+              </a>
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => handleDecreaseQuantity(product.id)}
@@ -149,16 +157,31 @@ export default function Cart() {
               </div>
             </div>
           ))}
-
-          <div className="text-right">
-            <p className="text-xl font-bold">Total: ${total.toFixed(2)}</p>
-          </div>
-
-          <button className="w-full py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700">
-            Buy Now
-          </button>
         </div>
-      )}
+
+        {/* Right Column: Order Summary */}
+        <div className="md:w-1/3 bg-white p-6 rounded-lg shadow-md h-fit">
+          <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+          <div className="space-y-4">
+            <div className="flex justify-between">
+              <span className="text-gray-600">Subtotal</span>
+              <span className="font-bold">${total.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Shipping</span>
+              <span className="text-green-600">Free</span>
+            </div>
+            <hr className="border-gray-200" />
+            <div className="flex justify-between text-lg font-bold">
+              <span>Total</span>
+              <span>${total.toFixed(2)}</span>
+            </div>
+            <button className="w-full py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700">
+              Proceed to Checkout
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
