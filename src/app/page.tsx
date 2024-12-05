@@ -75,8 +75,8 @@ export default function Home() {
     const loadCartCount = () => {
       const cartData = Cookies.get("cart");
       if (cartData) {
-        const cartItems = JSON.parse(cartData);
-        const totalItems = Object.values(cartItems).reduce((acc: number, count: number) => acc + count, 0);
+        const cartItems = JSON.parse(cartData) as { [key: string]: number }; // Cast to the correct type
+        const totalItems = Object.values(cartItems).reduce((acc, count) => acc + count, 0);
         setCartCount(totalItems); // Update the cart count
       }
     };
