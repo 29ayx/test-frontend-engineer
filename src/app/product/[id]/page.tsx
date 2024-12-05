@@ -167,6 +167,13 @@ export default function ProductDetails() {
                   >
                     +
                   </button>
+                  <button
+                  onClick={() => (window.location.href = "/cart")}
+                  className="px-6 py-3 bg-green-600 text-white text-2xl rounded-lg hover:bg-green-700"
+                >
+                   Checkout
+                </button>
+
                 </div>
               ) : (
                 <button

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { Star } from 'lucide-react'
 
 type Product = {
   id: number;
@@ -15,7 +16,7 @@ type Product = {
     rate: number;
     count: number;
   };
-  discountedPrice?: number; // Optional for discounted pricing
+  discountedPrice?: number;
 };
 
 type ProductCardProps = {
@@ -38,7 +39,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     e.stopPropagation();
     setCart((prev) => ({ ...prev, [product.id]: 1 }));
     setShowAddedMessage(true);
-    setTimeout(() => setShowAddedMessage(false), 2000); // Show message for 2 seconds
+    setTimeout(() => setShowAddedMessage(false), 2000);
   };
 
   const handleIncreaseQuantity = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -65,11 +66,47 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const isInCart = cart[product.id] !== undefined;
 
+  // Render star rating
+  const renderStarRating = () => {
+    if (!product.rating) return null;
+    
+    const fullStars = Math.floor(product.rating.rate);
+    const halfStar = product.rating.rate % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+    return (
+      <div className="flex items-center mt-1">
+        {[...Array(fullStars)].map((_, i) => (
+          <Star key={`full-${i}`} size={16} fill="#FFD700" color="#FFD700" />
+        ))}
+        {halfStar && (
+          <Star size={16} fill="url(#halfStar)" color="#FFD700" />
+        )}
+        {[...Array(emptyStars)].map((_, i) => (
+          <Star key={`empty-${i}`} size={16} color="#E0E0E0" />
+        ))}
+        <span className="text-xs text-gray-500 ml-1">
+          ({product.rating.count})
+        </span>
+      </div>
+    );
+  };
+
   return (
     <div
       onClick={handleCardClick}
       className="max-w-[220px] rounded-lg border border-gray-200 shadow-md bg-white flex flex-col overflow-hidden cursor-pointer hover:shadow-lg transition-shadow relative"
     >
+      {/* SVG for half-star fill */}
+      <svg width="0" height="0">
+        <defs>
+          <linearGradient id="halfStar">
+            <stop offset="50%" stopColor="#FFD700" />
+            <stop offset="50%" stopColor="#E0E0E0" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       {/* Image Section */}
       <div className="w-full h-36 sm:h-48 flex items-center justify-center bg-white">
         <img
@@ -85,6 +122,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <h2 className="text-xs sm:text-sm font-bold text-gray-800 truncate">
           {product.title}
         </h2>
+        
+        {/* Ratings */}
+        {renderStarRating()}
+
         {/* Description */}
         <p className="text-[10px] sm:text-xs text-gray-500 mt-1 truncate">
           {product.description}
@@ -108,24 +149,23 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="mt-4">
           {isInCart ? (
             <>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={handleDecreaseQuantity}
-                  className="w-8 h-8 bg-gray-300 text-gray-800 font-bold rounded-lg hover:bg-gray-400"
-                >
-                  -
-                </button>
-                <span className="text-sm font-bold">{cart[product.id]}</span>
-                <button
-                  onClick={handleIncreaseQuantity}
-                  className="w-8 h-8 bg-gray-300 text-gray-800 font-bold rounded-lg hover:bg-gray-400"
-                >
-                  +
-                </button>
+              <div className="flex flex-col space-y-2">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleDecreaseQuantity}
+                    className="w-8 h-8 bg-gray-300 text-gray-800 font-bold rounded-lg hover:bg-gray-400"
+                  >
+                    -
+                  </button>
+                  <span className="text-sm font-bold">{cart[product.id]}</span>
+                  <button
+                    onClick={handleIncreaseQuantity}
+                    className="w-8 h-8 bg-gray-300 text-gray-800 font-bold rounded-lg hover:bg-gray-400"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
-              <p className="text-[10px] text-green-600 mt-1">
-                Already added to cart
-              </p>
             </>
           ) : (
             <button
@@ -138,12 +178,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
       </div>
 
-      {/* Added to Cart Message */}
-      {showAddedMessage && (
-        <div className="absolute bottom-2 right-2 bg-green-500 text-white text-xs px-3 py-1 rounded-md shadow-lg">
-          Added to Cart!
-        </div>
-      )}
+      {/* Removed "Added to Cart Message" */}
     </div>
   );
 };
