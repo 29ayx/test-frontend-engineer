@@ -17,3 +17,4 @@ logs
 # Others
 .DS_Store
 .vscode/
+.vercel

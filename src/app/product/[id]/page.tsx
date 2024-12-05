@@ -47,7 +47,7 @@ export default function ProductDetails() {
   useEffect(() => {
     const loadProduct = async () => {
       try {
-        const fetchedProduct = await fetchProduct(id);
+        const fetchedProduct = await fetchProduct(id as string); 
         const fetchedProducts = await fetchAllProducts();
         setProduct(fetchedProduct);
         setSuggestedProducts(
